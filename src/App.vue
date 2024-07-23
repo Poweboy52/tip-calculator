@@ -1,30 +1,229 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
-</script>
-
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+    <div class="container">
+            <div class="inputs-container">
+                <div class="title-container">
+                    <p class="subheader">Bill</p>
+                    <p class="error-text" min="0" v-if="bill < 1">Can't be zero</p>
+                </div>
+                <input type="number" v-model="bill" class="input" :class="{'error': bill < 1}"></input>
+                <p class="subheader">Select Tip %</p>
+                <div class="tip-option-container">
+                    <div v-for="item in tipOptions" @click="active = item.id, relativeTip = item.tip" class="tip-option" :class="{'active': active === item.id}">
+                        
+                        <p>{{item.label}}</p>
+
+                    </div>
+                    <input class="input custom-tip" placeholder="Custom" v-model="customTip"></input>
+                </div>
+                <div class="title-container">
+                    <p class="subheader">Number of people</p>
+                    <p class="error-text" v-if="numberOfPeople < 1">Can't be zero</p>
+                </div>
+                <input type="number" v-model="numberOfPeople" min="0" class="input" :class="{'error': numberOfPeople < 1}"></input>
+            </div>
+            <div class="outputs-container">
+                <div v-for="item in outputs" class="output">
+                        <!--<v-bind:"value="updateOutputs()"/>-->
+                        <div class="output-title">
+                            <p class="output-title-text">{{ item.label }}</p>
+                            <p class="output-title-subtext">/ person</p>
+                        </div>
+                        <p class="output-value">£{{ !isFinite(getMyValue(item.label)) || isNaN(getMyValue(item.label)) ? 0 :getMyValue(item.label) }}</p>
+
+                </div>
+                <button class="reset-button" @click="reset()">reset</button>
+            </div>
+        </div>
 </template>
 
+<script setup>
+import(Math)
+function getMyValue(label) { 
+    let temp;
+    if (label === "Tip amount") {
+                temp = Math.round((customTip.value / 100 || relativeTip.value) * bill.value / numberOfPeople.value * 100) / 100
+            }
+            else {
+                temp = Math.round((1 + (customTip.value / 100 || relativeTip.value)) * bill.value / numberOfPeople.value * 100) / 100
+            }
+            return temp
+     }
+    import { ref, computed} from "vue"
+
+   function reset() {
+    bill.value = 0
+    active.value = 0
+    relativeTip.value = 0.05
+    numberOfPeople.value = 1
+   }
+    const bill = ref(0)
+    const active = ref(0)
+    const relativeTip = ref(0.05)
+    const numberOfPeople = ref(1)
+    const customTip = ref(0)
+    const tipOptions = ref([
+        {
+            label: "5%",
+            id: 0,
+            tip: 0.05
+        },
+        {
+            label: "10%",
+            id: 1,
+            tip: 0.1
+        },
+        {
+            label: "15%",
+            id: 2,
+            tip: 0.15
+        },
+        {
+            label: "25%",
+            id: 3,
+            tip: 0.25
+        },
+        {
+            label: "50%",
+            id: 4,
+            tip: 0.5
+        }
+    ])
+    const outputs = ref([
+        {
+            label: "Tip amount"
+        },
+        {
+            label: "Total"
+        }
+    ])
+
+</script>
+
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+.input {
+    padding: 5px 8px;
+    text-align: right;
+    font-size: 17px;
+    font-family: "Space Mono", monospace;
+    font-weight: bold;
+    color: hsl(183, 100%, 15%);
+    background-color: hsl(189, 41%, 97%);
+    border-width: 0px;
+    box-shadow: inset 0 2px 4px 0 rgb(0 0 0 / 0.05);
+    border-radius: 4px;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+.input:focus {
+    outline: auto hsl(172, 67%, 45%)
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+.custom-tip.input{
+    width: 70px;
+    padding: 4px 11px;
+}
+.container {
+    display: flex;
+    padding: 24px;
+    gap: 20px;
+    background-color: hsl(0, 0%, 100%);
+    border-radius: 20px;
+    font-family: "Space Mono", monospace;
+    width: 650px;
+}
+.tip-option-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.tip-option {
+    width: 70px;
+    padding: 4px 11px;
+    border-radius: 4px;
+    background-color: hsl(183, 100%, 15%);
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    font-size: 18px;
+    color: white;
+    cursor: pointer;
+    font-weight: bold;
+    border-width: 0px;
+}
+.output {
+    display: flex;
+    margin-bottom: 50px;
+    justify-content: space-between;
+    align-items: center;
+}
+.output-title {
+    gap: 0px;
+}
+.output-title-text {
+    margin: 0;
+}
+.outputs-container {
+    background-color: hsl(183, 100%, 15%);
+    padding: 30px;
+    border-radius: 12px;
+    margin: 0px;
+    flex: 3;
+}
+.outputs-container, .inputs-container {
+    width: 100%;
+}
+.inputs-container {
+    gap: px;
+    display: flex;
+    flex-direction: column;
+    flex: 4;
+    gap: 6px;
+}
+.reset-button {
+    padding: 10px 0px;
+    width: 100%;
+    background-color: hsl(172, 67%, 45%);
+    text-transform: uppercase;
+    border-radius: 4px;
+    color: hsl(183, 100%, 15%);
+    font-weight: bold;
+    margin-top: 50px;
+}
+.subheader {
+    color: hsl(184, 14%, 56%);
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 30px;
+}
+.output-title-text {
+    color: hsl(0, 0%, 100%);
+    font-size: 12px;
+    font-weight: bold;
+}
+.output-title-subtext {
+    color: hsl(184, 14%, 56%);
+    margin: 0px;
+    font-size: 10px;
+    font-weight: bold;
+}
+.output-value {
+    font-size: 40px;
+    font-weight: bold;
+    color: hsl(172, 67%, 45%);
+}
+.active {
+    background-color: hsl(185, 41%, 84%);
+    color: hsl(183, 100%, 15%);
+}
+.error {
+    border: 2px solid red;
+}
+.title-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.error-text {
+    color: red;
+    font-size: 13px;
+    font-weight: bold;
+    margin-top: 30px;
 }
 </style>
