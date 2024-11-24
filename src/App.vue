@@ -164,7 +164,24 @@ function getTipGetTotal(label) {
   cursor: pointer;
   font-weight: bold;
   border-width: 0px;
+  transition: 0.3s;
 }
+
+.tip-option:hover {
+  background-color: hsl(185, 41%, 84%);
+  color: hsl(184, 14%, 56%);
+}
+
+.tip-option.active:hover {
+  background-color: hsl(185, 41%, 84%);
+  color: hsl(183, 100%, 15%);
+}
+
+.active {
+  background-color: hsl(185, 41%, 84%);
+  color: hsl(183, 100%, 15%);
+}
+
 .output {
   display: flex;
   margin-bottom: 50px;
@@ -197,14 +214,26 @@ function getTipGetTotal(label) {
 }
 .reset-button {
   padding: 10px 0px;
-  width: 100%;
+  width: 100%;            
   background-color: hsl(172, 67%, 45%);
   text-transform: uppercase;
   border-radius: 4px;
   color: hsl(183, 100%, 15%);
   font-weight: bold;
   margin-top: 50px;
+  transition: 0.3s;
 }
+
+.reset-button:hover {
+  background-color: white;
+}
+
+.reset-button:active {
+  transition: 0s;
+  background-color: white;
+  color: white;
+}
+
 .subheader {
   color: hsl(184, 14%, 56%);
   font-size: 13px;
@@ -227,10 +256,7 @@ function getTipGetTotal(label) {
   font-weight: bold;
   color: hsl(172, 67%, 45%);
 }
-.active {
-  background-color: hsl(185, 41%, 84%);
-  color: hsl(183, 100%, 15%);
-}
+
 .error {
   border: 2px solid red;
 }
